@@ -1,4 +1,6 @@
-import 'package:cityloveradmin/models/adminmodel.dart';
+import 'package:cityloveradmin/app_contants/string_generator.dart';
+import 'package:cityloveradmin/models/country_model.dart';
+import 'package:cityloveradmin/models/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +9,7 @@ String errorMessage = '';
 class FirebaseAuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  Future<AdminModel?> createEmailPassword({
+  Future<UserModel?> createEmailPassword({
     required String email,
     required String password,
   }) async {
@@ -16,10 +18,18 @@ class FirebaseAuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
       errorMessage = '';
       return userCredential.user != null
-          ? AdminModel(
+          ? UserModel(
               userID: userCredential.user!.uid,
               userEmail: userCredential.user!.email!,
               status: true,
+              userGender: '0',
+              userName: 'Admin',
+              userSurname: getRandomString(6),
+              userProfilePict:
+                  'https://firebasestorage.googleapis.com/v0/b/citylover-a0f89.appspot.com/o/32QXZ91QqLxi%2F9336cbc0-207a-4980-b5d4-7e86786eb43b.png?alt=media&token=6b984a73-ed8b-4cbf-8610-e11d2f92df73',
+              userBirthdate: DateTime.now(),
+              lastCountry: LocationModel(id: '1', name: 'Afganistan'),
+              lastState: LocationModel(id: '1', name: 'Badakhshan'),
               role: 1)
           : null;
     } on FirebaseAuthException catch (ex) {
@@ -41,9 +51,9 @@ class FirebaseAuthService {
     }
   }
 
-  AdminModel? userToUserModel(User? user) {
+  UserModel? userToUserModel(User? user) {
     if (user != null) {
-      return AdminModel(
+      return UserModel(
         userID: user.uid,
         userEmail: user.email ?? '',
       );
@@ -52,7 +62,7 @@ class FirebaseAuthService {
     }
   }
 
-  Future<AdminModel?> currentUser() async {
+  Future<UserModel?> currentUser() async {
     try {
       var user = firebaseAuth.currentUser;
       return userToUserModel(user);
@@ -62,7 +72,7 @@ class FirebaseAuthService {
     }
   }
 
-  Future<AdminModel?> signInEmailPassword(String email, String sifre) async {
+  Future<UserModel?> signInEmailPassword(String email, String sifre) async {
     try {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: sifre);

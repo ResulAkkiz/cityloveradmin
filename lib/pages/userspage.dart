@@ -1,4 +1,5 @@
 import 'package:cityloveradmin/app_contants/app_extensions.dart';
+import 'package:cityloveradmin/common_widgets/custom_model_sheet.dart';
 import 'package:cityloveradmin/models/usermodel.dart';
 import 'package:cityloveradmin/service/user_view_model.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +37,10 @@ class _UsersPageState extends State<UsersPage> {
               ? ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   itemBuilder: (context, index) {
-                    UserModel currentUser = usersList[index];
+                    UserModel currentUser = userViewModel.userList[index];
                     return ListTile(
-                      onTap: () {},
+                      textColor:
+                          currentUser.status! ? Colors.black : Colors.red,
                       leading: CircleAvatar(
                         backgroundImage:
                             NetworkImage(currentUser.userProfilePict!),
@@ -51,13 +53,11 @@ class _UsersPageState extends State<UsersPage> {
                             style: const TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w500),
                           ),
-
                           Text(
                             'Ad-Soyad: ${currentUser.userName!} ${currentUser.userSurname!}',
                             style: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),
-
                           Text(
                             'E-mail: ${currentUser.userEmail}',
                             style: const TextStyle(
@@ -81,130 +81,52 @@ class _UsersPageState extends State<UsersPage> {
                             children: [
                               currentUser.status!
                                   ? IconButton(
-                                      icon: const Icon(Icons.block),
-                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.block,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () async {
+                                        bool isSuccessful = await userViewModel
+                                            .updateUser(currentUser.userID,
+                                                {'status': false});
+
+                                        if (isSuccessful && mounted) {
+                                          buildShowModelBottomSheet(
+                                              context,
+                                              'Blocklama işlemi başarıyla gerçekleşti.',
+                                              Icons.done_outlined);
+                                          await userViewModel.readAllUsers();
+                                        }
+                                      },
                                     )
                                   : IconButton(
-                                      icon: const Icon(Icons.check),
-                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.check,
+                                        color: Colors.green,
+                                      ),
+                                      onPressed: () async {
+                                        bool isSuccessful = await userViewModel
+                                            .updateUser(currentUser.userID,
+                                                {'status': true});
+
+                                        if (isSuccessful && mounted) {
+                                          buildShowModelBottomSheet(
+                                              context,
+                                              'Block kaldırma işlemi başarıyla gerçekleşti.',
+                                              Icons.done_outlined);
+                                          await userViewModel.readAllUsers();
+                                        }
+                                      },
                                     )
                             ],
                           )
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.end,
-                          //   children: [
-                          //     Row(
-                          //       mainAxisSize: MainAxisSize.min,
-                          //       children: [
-                          //         const Icon(
-                          //           Icons.comment,
-                          //           size: 16,
-                          //         ),
-                          //         const SizedBox(
-                          //           width: 4,
-                          //         ),
-                          //         FutureBuilder(
-                          //             future: userViewModel
-                          //                 .getCommentsList(currentSharing.sharingID),
-                          //             builder: (context, AsyncSnapshot snapshot) {
-                          //               if (snapshot.hasData) {
-                          //                 List<CommentModel> commentList =
-                          //                     snapshot.data;
-                          //                 int listLength = commentList.length;
-                          //                 return Text(
-                          //                   listLength.toString(),
-                          //                   style: const TextStyle(
-                          //                     color: Colors.black54,
-                          //                     fontSize: 12,
-                          //                   ),
-                          //                 );
-                          //               } else if (snapshot.hasError) {
-                          //                 return Center(
-                          //                     child: Text(snapshot.error.toString()));
-                          //               } else {
-                          //                 return const Center(
-                          //                   child: CircularProgressIndicator(),
-                          //                 );
-                          //               }
-                          //             }),
-                          //         Builder(
-                          //           builder: (context) {
-                          //             if (userViewModel.user != null) {
-                          //               if (currentSharing.userID !=
-                          //                   userViewModel.user!.userID) {
-                          //                 return IconButton(
-                          //                   padding: EdgeInsets.zero,
-                          //                   onPressed: () async {
-                          //                     bool response = await buildShowDialog(
-                          //                             context,
-                          //                             const Text('Uyarı'),
-                          //                             const Text(
-                          //                                 'Seçmiş olduğunuz paylaşımı, raporlamak istediğinizden emin misiniz ?')) ??
-                          //                         false;
-                          //                     if (response) {
-                          //                       bool isSuccessful =
-                          //                           await userViewModel.reportSharing(
-                          //                               currentSharing);
-                          //                       debugPrint(isSuccessful.toString());
-                          //                       if (isSuccessful && mounted) {
-                          //                         buildShowModelBottomSheet(
-                          //                             context,
-                          //                             'Raporlama işlemi başarıyla gerçekleşti. İnceleme sonucu gerekli aksiyonlar alınacaktır.',
-                          //                             Icons.report_problem);
-                          //                       }
-                          //                     }
-                          //                   },
-                          //                   constraints: const BoxConstraints(),
-                          //                   icon: const Icon(
-                          //                     Icons.report_problem_outlined,
-                          //                     size: 14,
-                          //                   ),
-                          //                 );
-                          //               } else {
-                          //                 return IconButton(
-                          //                   padding: EdgeInsets.zero,
-                          //                   onPressed: () async {
-                          //                     bool response = await buildShowDialog(
-                          //                             context,
-                          //                             const Text('Uyarı'),
-                          //                             const Text(
-                          //                                 'Seçmiş olduğunuz paylaşımı, silmek istediğinizden emin misiniz ?')) ??
-                          //                         false;
-
-                          //                     if (response) {
-                          //                       bool isSuccesful = await userViewModel
-                          //                           .deleteSharing(currentSharing);
-                          //                       if (isSuccesful && mounted) {
-                          //                         buildShowModelBottomSheet(
-                          //                             context,
-                          //                             'Paylaşım silme işlemi başarıyla gerçekleşti.',
-                          //                             Icons.check);
-                          //                       }
-                          //                     }
-                          //                   },
-                          //                   constraints: const BoxConstraints(),
-                          //                   icon: const Icon(
-                          //                     Icons.clear,
-                          //                     size: 14,
-                          //                   ),
-                          //                 );
-                          //               }
-                          //             } else {
-                          //               return const SizedBox();
-                          //             }
-                          //           },
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ],
-                          // )
                         ],
                       ).separated(const SizedBox(
                         height: 8,
                       )),
                     );
                   },
-                  itemCount: usersList.length,
+                  itemCount: userViewModel.userList.length,
                   separatorBuilder: (BuildContext context, int index) {
                     return const Divider(thickness: 1.2);
                   },
@@ -219,8 +141,7 @@ class _UsersPageState extends State<UsersPage> {
 
   Future<void> getUsers() async {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    usersList = await userViewModel.readAllUsers();
+    await userViewModel.readAllUsers();
     isUsersReady = true;
-    setState(() {});
   }
 }

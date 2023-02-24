@@ -1,7 +1,8 @@
 import 'package:cityloveradmin/app_contants/app_extensions.dart';
 import 'package:cityloveradmin/app_contants/custom_theme.dart';
 import 'package:cityloveradmin/common_widgets/custom_model_sheet.dart';
-import 'package:cityloveradmin/models/adminmodel.dart';
+import 'package:cityloveradmin/models/usermodel.dart';
+
 import 'package:cityloveradmin/service/firebase_auth_service.dart';
 import 'package:cityloveradmin/service/user_view_model.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _SignupPageState extends State<SignupPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool obscurePassword = false;
+  bool obscurePassword = true;
   @override
   void initState() {
     super.initState();
@@ -120,7 +121,7 @@ class _SignupPageState extends State<SignupPage> {
                                           ));
                                     },
                                   );
-                                  AdminModel? userModel =
+                                  UserModel? userModel =
                                       await userViewModel.createEmailPassword(
                                     email: emailController.text,
                                     password: passwordController.text,

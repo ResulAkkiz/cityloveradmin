@@ -45,8 +45,8 @@ class _ReportedCommentPageState extends State<ReportedCommentPage> {
                         builder: (context, AsyncSnapshot<UserModel?> snapshot) {
                           if (snapshot.hasData) {
                             var currentUser = snapshot.data;
-                            debugPrint(currentUser.toString());
                             return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 6.0),
                               decoration: BoxDecoration(
                                   color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(12.0)),
@@ -80,6 +80,13 @@ class _ReportedCommentPageState extends State<ReportedCommentPage> {
                                     Text(
                                       DateFormat('HH:mm•dd/MM/yyyy')
                                           .format(currentComment.commentDate),
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Paylaşım ID: ${currentComment.sharingID}',
                                       style: const TextStyle(
                                         fontSize: 10,
                                         color: Colors.black54,

@@ -1,8 +1,8 @@
-import 'package:cityloveradmin/models/adminmodel.dart';
 import 'package:cityloveradmin/models/commentmodel.dart';
 import 'package:cityloveradmin/models/sharingmodel.dart';
 import 'package:cityloveradmin/models/usermodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseDbService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -26,13 +26,25 @@ class FirebaseDbService {
     return UserModel.fromMap(userMap!);
   }
 
-  Future<bool> saveUser(AdminModel adminModel) async {
-    Map<String, dynamic> adminMap = adminModel.toMap();
+  // Future<SharingModel?> getSharingByID(String userID, String sharingID) async {
+  //   var snapshot = (await firestore.collection('sharingsbyuser').get()).docs;
+  //   SharingModel? sharingModel;
+  //   for (QueryDocumentSnapshot<Map<String, dynamic>> element in snapshot) {
+  //     debugPrint(element.data().toString());
+  //   }
+
+  //   Map<String, dynamic>? sharingMap = {};
+  //   debugPrint(sharingMap.toString());
+  //   return SharingModel.fromMap(sharingMap);
+  // }
+
+  Future<bool> saveUser(UserModel userModel) async {
+    Map<String, dynamic> userMap = userModel.toMap();
 
     await firestore
-        .collection('admins')
-        .doc(adminModel.userID.toString())
-        .set(adminMap);
+        .collection('users')
+        .doc(userModel.userID.toString())
+        .set(userMap);
     return true;
   }
 

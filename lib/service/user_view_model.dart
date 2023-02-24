@@ -1,4 +1,3 @@
-import 'package:cityloveradmin/models/adminmodel.dart';
 import 'package:cityloveradmin/models/commentmodel.dart';
 import 'package:cityloveradmin/models/sharingmodel.dart';
 import 'package:cityloveradmin/models/usermodel.dart';
@@ -7,9 +6,9 @@ import 'package:cityloveradmin/service/firebase_db_service.dart';
 import 'package:flutter/material.dart';
 
 class UserViewModel extends ChangeNotifier {
-  AdminModel? _user;
+  UserModel? _user;
 
-  AdminModel? get user => _user;
+  UserModel? get user => _user;
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
   FirebaseDbService firebaseDbService = FirebaseDbService();
 
@@ -23,7 +22,7 @@ class UserViewModel extends ChangeNotifier {
   List<SharingModel> sharingList = [];
   List<UserModel> userList = [];
 
-  Future<AdminModel?> createEmailPassword({
+  Future<UserModel?> createEmailPassword({
     required String email,
     required String password,
   }) async {
@@ -44,13 +43,17 @@ class UserViewModel extends ChangeNotifier {
     return userList;
   }
 
-  Future<AdminModel?> currentUser() async {
+  // Future<SharingModel?> getSharingByID(String userID, String sharingID) async {
+  //   return firebaseDbService.getSharingByID(userID, sharingID);
+  // }
+
+  Future<UserModel?> currentUser() async {
     _user = await firebaseAuthService.currentUser();
     notifyListeners();
     return _user;
   }
 
-  Future<AdminModel?> signInEmailPassword(String email, String password) async {
+  Future<UserModel?> signInEmailPassword(String email, String password) async {
     _user = await firebaseAuthService.signInEmailPassword(email, password);
     notifyListeners();
     return _user;
@@ -74,7 +77,7 @@ class UserViewModel extends ChangeNotifier {
     return reportedSharingList;
   }
 
-  Future<bool> saveUser(AdminModel user) async {
+  Future<bool> saveUser(UserModel user) async {
     return await firebaseDbService.saveUser(user);
   }
 
@@ -86,7 +89,7 @@ class UserViewModel extends ChangeNotifier {
       String countryValue, String cityValue) async {
     sharingList =
         await firebaseDbService.getSharingsbyLocation(countryValue, cityValue);
-    debugPrint(sharingList.length.toString());
+
     notifyListeners();
   }
 

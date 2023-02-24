@@ -1,5 +1,5 @@
 import 'package:cityloveradmin/app_contants/custom_theme.dart';
-import 'package:cityloveradmin/pages/homepage.dart';
+import 'package:cityloveradmin/pages/landingpage/landing_page.dart';
 import 'package:cityloveradmin/service/user_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: customTheme,
-        home: const HomePage(),
+        home: const LandingScreen(),
       ),
     );
   }

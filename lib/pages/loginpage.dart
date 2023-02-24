@@ -1,6 +1,5 @@
 import 'package:cityloveradmin/app_contants/app_extensions.dart';
 import 'package:cityloveradmin/common_widgets/custom_model_sheet.dart';
-import 'package:cityloveradmin/pages/landingpage/landing_page.dart';
 import 'package:cityloveradmin/service/firebase_auth_service.dart';
 import 'package:cityloveradmin/service/user_view_model.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                       ClipRRect(
                           borderRadius: BorderRadius.circular(12.0),
                           child: Image.asset('assets/images/im_city.png',
-                              scale: 5)),
+                              scale: 2)),
                       TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -85,37 +84,17 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           formKey.currentState!.save();
                           if (formKey.currentState!.validate()) {
-                            showModalBottomSheet(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(24.0),
-                                    topRight: Radius.circular(24.0)),
-                              ),
-                              backgroundColor: Theme.of(context).primaryColor,
-                              context: context,
-                              builder: (context) {
-                                return SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.grey,
-                                      ),
-                                    ));
-                              },
-                            );
-                            await userViewModel.signInEmailPassword(
+                            var user = await userViewModel.signInEmailPassword(
                                 emailController.text, passwordController.text);
-                            if (mounted && userViewModel.user != null) {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LandingScreen()),
-                                  (Route<dynamic> route) => false);
+                            if (userViewModel.user != null) {
+                              var usermodel =
+                                  await userViewModel.readUser(user!.userID);
+                              debugPrint(usermodel.toString());
+                              if (usermodel!.role != 1) {
+                                await userViewModel.signOut();
+                              }
                             } else {
                               if (mounted) {
-                                Navigator.of(context).pop();
                                 buildShowModelBottomSheet(context, errorMessage,
                                     Icons.question_mark_outlined);
                                 errorMessage = '';
