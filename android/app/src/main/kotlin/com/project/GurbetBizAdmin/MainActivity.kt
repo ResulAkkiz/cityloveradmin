@@ -1,4 +1,4 @@
-package com.example.cityloveradmin
+package com.project.GurbetBizAdmin
 
 import io.flutter.embedding.android.FlutterActivity
 

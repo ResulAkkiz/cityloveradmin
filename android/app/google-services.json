@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:634897055312:android:056a66127f40bb4e801b55",
+        "mobilesdk_app_id": "1:634897055312:android:aff77c34b97d72e2801b55",
         "android_client_info": {
-          "package_name": "com.example.citylover"
+          "package_name": "com.project.GurbetBiz"
         }
       },
       "oauth_client": [
@@ -44,9 +44,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:634897055312:android:e1f35be834d37250801b55",
+        "mobilesdk_app_id": "1:634897055312:android:bc4e301600a3ad50801b55",
         "android_client_info": {
-          "package_name": "com.example.cityloveradmin"
+          "package_name": "com.project.GurbetBizAdmin"
         }
       },
       "oauth_client": [
